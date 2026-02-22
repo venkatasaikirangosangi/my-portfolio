@@ -17,6 +17,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const [showProfile, setShowProfile] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [showRegion, setShowRegion] = useState(false);
+  const [showPageMenu, setShowPageMenu] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("ap-south-1");
   const pathname = usePathname();
@@ -162,34 +163,87 @@ export default function Header({ onMenuClick }: HeaderProps) {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-[#232f3e] dark:bg-[#232f3e] border-b border-[#3c4d5c] px-4 py-2"
+      className="bg-[#232f3e] dark:bg-[#232f3e] border-b border-[#3c4d5c] px-4 py-2 relative z-40"
     >
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center gap-4 min-w-0">
         {/* Left Section: Menu button + Breadcrumb + Search */}
-        <div className="flex items-center gap-3 flex-1">
+        <div className="flex items-center gap-3 flex-shrink-0">
           {/* Mobile Menu Button */}
           {onMenuClick && (
             <motion.button
               whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
               whileTap={{ scale: 0.95 }}
               onClick={onMenuClick}
-              className="lg:hidden p-2 rounded text-white"
+              className="lg:hidden p-2 rounded text-white flex-shrink-0"
               title="Open menu"
             >
               <Menu className="w-5 h-5" />
             </motion.button>
           )}
           
-          {/* Page Title Breadcrumb */}
-          <div className="flex items-center gap-2 text-sm bg-[#1a2332] px-3 py-1.5 rounded border border-[#3c4d5c]">
-            <LayoutDashboard className="w-4 h-4 text-aws-orange" />
-            <span className="text-gray-400">/</span>
-            <span className="text-white font-medium">{getPageTitle()}</span>
+          {/* Page Title Breadcrumb with Dropdown */}
+          <div className="relative flex-shrink-0">
+            <motion.button
+              whileHover={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+              onClick={() => {
+                setShowPageMenu(!showPageMenu);
+                setShowNotifications(false);
+                setShowProfile(false);
+                setShowServices(false);
+                setShowRegion(false);
+              }}
+              className="flex items-center gap-2 text-sm bg-[#1a2332] px-3 py-1.5 rounded border border-[#3c4d5c] cursor-pointer hover:border-aws-orange transition-colors"
+            >
+              <LayoutDashboard className="w-4 h-4 text-aws-orange" />
+              <span className="text-gray-400">/</span>
+              <span className="text-white font-medium whitespace-nowrap">{getPageTitle()}</span>
+              <ChevronDown className="w-3 h-3 text-gray-400" />
+            </motion.button>
+
+            <AnimatePresence>
+              {showPageMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="fixed left-4 md:absolute md:left-0 mt-2 w-72 max-w-[calc(100vw-2rem)] bg-white dark:bg-[#1e2a35] border border-gray-300 dark:border-[#3c4d5c] rounded-lg shadow-xl z-[100]"
+                  style={{ top: '60px' }}
+                >
+                  <div className="p-2">
+                    {services.map((service) => {
+                      const Icon = service.icon;
+                      const isActive = pathname === service.path;
+                      return (
+                        <Link key={service.path} href={service.path}>
+                          <button
+                            onClick={() => setShowPageMenu(false)}
+                            className={`w-full text-left px-3 py-2.5 rounded transition-colors flex items-center gap-3 ${
+                              isActive 
+                                ? 'bg-aws-orange/10 text-aws-orange' 
+                                : 'text-aws-text dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a3f51]'
+                            }`}
+                          >
+                            <Icon className={`w-4 h-4 ${isActive ? 'text-aws-orange' : 'text-gray-500 dark:text-gray-400'}`} />
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">{service.name}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{service.description}</p>
+                            </div>
+                            {isActive && (
+                              <div className="w-1.5 h-1.5 bg-aws-orange rounded-full" />
+                            )}
+                          </button>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Search */}
-          <div className="flex-1 max-w-md">
-            <div className="relative">
+          <div className="hidden md:flex flex-1 max-w-md min-w-0">
+            <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
@@ -200,14 +254,17 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </div>
         </div>
 
+        {/* Spacer */}
+        <div className="flex-1 hidden md:block"></div>
+
         {/* Right Section: Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide min-w-0">
           {/* Download Resume */}
           <motion.a
             whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
             href="/SaiKiran_Resume.pdf"
             download="Venkata_Sai_Kiran_Resume.pdf"
-            className="flex items-center gap-2 px-3 py-1.5 rounded text-white text-sm font-medium"
+            className="flex items-center gap-2 px-3 py-1.5 rounded text-white text-sm font-medium whitespace-nowrap flex-shrink-0"
             title="Download Resume"
           >
             <Download className="w-4 h-4" />
@@ -218,14 +275,14 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <motion.button
             whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
             onClick={toggleTheme}
-            className="p-2 rounded text-white"
+            className="p-2 rounded text-white flex-shrink-0"
             title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </motion.button>
 
           {/* Notifications */}
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <motion.button
               whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
               onClick={() => {
@@ -234,7 +291,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                 setShowServices(false);
                 setShowRegion(false);
               }}
-              className="relative p-2 rounded text-white"
+              className="relative p-2 rounded text-white flex-shrink-0"
             >
               <Bell className="w-5 h-5" />
               {notifications.filter(n => n.unread).length > 0 && (
@@ -253,7 +310,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-96 bg-white dark:bg-[#1e2a35] border border-gray-300 dark:border-[#3c4d5c] rounded-lg shadow-2xl z-50"
+                  className="fixed right-4 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-white dark:bg-[#1e2a35] border border-gray-300 dark:border-[#3c4d5c] rounded-lg shadow-2xl z-[100]"
+                  style={{ top: '60px' }}
                 >
                   <div className="p-4 border-b border-gray-200 dark:border-[#3c4d5c] flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-aws-text dark:text-white">Notifications</h3>
@@ -316,7 +374,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </div>
 
           {/* Region Selector */}
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <motion.button
               whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
               onClick={() => {
@@ -338,7 +396,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-80 bg-white dark:bg-[#1e2a35] border border-gray-300 dark:border-[#3c4d5c] rounded-lg shadow-xl z-50"
+                  className="fixed right-4 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white dark:bg-[#1e2a35] border border-gray-300 dark:border-[#3c4d5c] rounded-lg shadow-xl z-[100]"
+                  style={{ top: '60px' }}
                 >
                   <div className="p-3 border-b border-gray-200 dark:border-[#3c4d5c]">
                     <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Select Region</p>
@@ -385,12 +444,12 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </div>
 
           {/* Clock */}
-          <div className="hidden lg:flex items-center justify-center px-4 py-1.5 border-l border-[#3c4d5c] ml-4 pl-4">
-            <p className="text-xs text-white font-mono">{currentTime}</p>
+          <div className="flex items-center justify-center px-3 py-1.5 border-l border-[#3c4d5c] flex-shrink-0">
+            <p className="text-xs text-white font-mono whitespace-nowrap">{currentTime}</p>
           </div>
 
           {/* User Profile */}
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <motion.button
               whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
               onClick={() => {
@@ -399,13 +458,13 @@ export default function Header({ onMenuClick }: HeaderProps) {
                 setShowServices(false);
                 setShowRegion(false);
               }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded border-l border-[#3c4d5c] ml-2 pl-3"
+              className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded border-l border-[#3c4d5c] ml-2 pl-2 sm:pl-3"
             >
               <User className="w-4 h-4 text-gray-400" />
-              <div className="text-left hidden sm:block">
+              <div className="text-left hidden md:block">
                 <p className="text-xs text-white font-medium">Sai Kiran</p>
               </div>
-              <ChevronDown className="w-3 h-3 text-gray-400" />
+              <ChevronDown className="w-3 h-3 text-gray-400 hidden sm:block" />
             </motion.button>
 
             <AnimatePresence>
@@ -414,7 +473,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#1e2a35] border border-gray-300 dark:border-[#3c4d5c] rounded-lg shadow-xl z-50"
+                  className="fixed right-4 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-white dark:bg-[#1e2a35] border border-gray-300 dark:border-[#3c4d5c] rounded-lg shadow-xl z-[100]"
+                  style={{ top: '60px' }}
                 >
                   <div className="p-4 border-b border-gray-200 dark:border-[#3c4d5c] bg-gray-50 dark:bg-[#1a2633]">
                     <div className="flex items-center gap-3">

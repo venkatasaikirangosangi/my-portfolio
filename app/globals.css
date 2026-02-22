@@ -32,6 +32,16 @@ body {
   background: #3A4F64;
 }
 
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Smooth transitions */
 * {
   transition-property: color, background-color, border-color;

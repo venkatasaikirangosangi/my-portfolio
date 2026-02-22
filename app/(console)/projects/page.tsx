@@ -90,30 +90,30 @@ export default function ProjectsPage() {
               whileTap={{ scale: 0.98 }}
               className="bg-white dark:bg-aws-cardDark border border-gray-300 dark:border-aws-border rounded shadow-sm p-6 cursor-pointer hover:shadow-lg hover:border-aws-orange dark:hover:border-blue-400 transition-all duration-150"
             >
-              <div className="flex items-start gap-6">
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
                 {/* Icon */}
                 <div className="p-4 bg-gray-100 dark:bg-aws-sidebar rounded-lg">
                   <Icon className="w-8 h-8 text-aws-orange" />
                 </div>
 
                 {/* Content */}
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-semibold text-aws-text dark:text-white">
+                <div className="flex-1 w-full min-w-0">
+                  <div className="flex flex-col sm:flex-row items-start justify-between mb-3 gap-2">
+                    <div className="w-full">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <h3 className="text-xl font-semibold text-aws-text dark:text-white break-words">
                           {project.name}
                         </h3>
-                        <span className="px-2 py-1 bg-green-500/10 text-green-500 text-xs font-medium rounded-full flex items-center gap-1">
+                        <span className="px-2 py-1 bg-green-500/10 text-green-500 text-xs font-medium rounded-full flex items-center gap-1 whitespace-nowrap">
                           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                           {project.status}
                         </span>
-                        <span className="px-2 py-1 bg-aws-blue/10 text-aws-blue text-xs font-medium rounded-full">
+                        <span className="px-2 py-1 bg-aws-blue/10 text-aws-blue text-xs font-medium rounded-full whitespace-nowrap">
                           {project.type}
                         </span>
                       </div>
-                      <p className="text-aws-textLight dark:text-gray-400 mb-3">{project.description}</p>
-                      <p className="text-gray-500 dark:text-gray-500 text-sm mb-3">Instance ID: {project.id}</p>
+                      <p className="text-aws-textLight dark:text-gray-400 mb-3 break-words">{project.description}</p>
+                      <p className="text-gray-500 dark:text-gray-500 text-sm mb-3 break-words">Instance ID: {project.id}</p>
                     </div>
                   </div>
 
@@ -130,7 +130,7 @@ export default function ProjectsPage() {
                   </div>
 
                   {/* Metrics */}
-                  <div className="grid grid-cols-3 gap-4 mb-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                     {Object.entries(project.metrics).map(([key, value]) => (
                       <div key={key} className="bg-gray-50 dark:bg-aws-sidebar rounded p-3">
                         <p className="text-gray-500 dark:text-gray-500 text-xs mb-1 uppercase">{key}</p>

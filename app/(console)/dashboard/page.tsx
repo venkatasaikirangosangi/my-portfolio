@@ -47,7 +47,7 @@ export default function DashboardPage() {
         className="bg-white dark:bg-aws-cardDark rounded-lg border border-gray-200 dark:border-aws-border shadow-sm hover:shadow-xl transition-all hover:border-aws-orange dark:hover:border-blue-400 cursor-pointer"
       >
         <div className="p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-1">
                 Venkata Sai Kiran
@@ -56,7 +56,7 @@ export default function DashboardPage() {
                 Senior Cloud DevOps Engineer at Capgemini • Bangalore, India
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <span className="px-3 py-1.5 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 rounded-md text-xs font-medium">
                 Kubernetes
               </span>

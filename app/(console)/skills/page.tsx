@@ -77,7 +77,7 @@ export default function SkillsPage() {
         whileTap={{ scale: 0.98 }}
         className="bg-white dark:bg-aws-cardDark border border-gray-300 dark:border-aws-border rounded-lg p-6 cursor-pointer hover:shadow-lg hover:border-aws-orange dark:hover:border-blue-400 transition-all duration-150"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-aws-text dark:text-white mb-2 flex items-center gap-3">
               <Activity className="w-8 h-8 text-aws-orange" />
